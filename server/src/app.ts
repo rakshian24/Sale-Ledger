@@ -5,38 +5,68 @@ import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import authRoutes from "./routes/auth.routes.js";
 import entryRoutes from "./routes/entry.routes.js";
-import { errorMiddleware, notFoundMiddleware } from "./middlewares/error.middleware.js";
+import { connectDB } from "./config/db.js";
+import {
+  errorMiddleware,
+  notFoundMiddleware,
+} from "./middlewares/error.middleware.js";
 
 const app = express();
 
-const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
+const allowedOrigins = (
+  process.env.CLIENT_URLS ||
+  process.env.CLIENT_URL ||
+  "http://localhost:5173"
+)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 app.use(helmet());
 
 app.use(
   cors({
-    origin: clientUrl,
-    credentials: true
-  })
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origin ${origin} is not allowed by CORS`));
+    },
+    credentials: true,
+  }),
 );
 
 app.use(express.json({ limit: "1mb" }));
-app.use(morgan("dev"));
+
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     limit: 300,
     standardHeaders: true,
-    legacyHeaders: false
-  })
+    legacyHeaders: false,
+  }),
 );
 
 app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
-    app: "Sale Ledger API"
+    app: "DayLedger API",
   });
+});
+
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.use("/api/auth", authRoutes);

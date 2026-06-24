@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 
+let cachedConnection: typeof mongoose | null = null;
+
 export const connectDB = async () => {
+  if (cachedConnection && mongoose.connection.readyState === 1) {
+    return cachedConnection;
+  }
+
   const mongoUri = process.env.MONGO_URI;
 
   if (!mongoUri) {
@@ -9,7 +15,11 @@ export const connectDB = async () => {
 
   mongoose.set("strictQuery", true);
 
-  await mongoose.connect(mongoUri);
+  cachedConnection = await mongoose.connect(mongoUri, {
+    bufferCommands: false,
+  });
 
   console.log("MongoDB connected");
+
+  return cachedConnection;
 };
