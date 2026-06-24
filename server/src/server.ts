@@ -4,13 +4,13 @@ import { connectDB } from "./config/db.js";
 
 dotenv.config();
 
-const PORT = Number(process.env.PORT) || 5001;
+const PORT = Number(process.env.PORT) || 5000;
 
 const startServer = async () => {
   await connectDB();
 
   app.listen(PORT, () => {
-    console.log(`Sale Ledger API running on http://localhost:${PORT}`);
+    console.log(`DayLedger API running on http://localhost:${PORT}`);
   });
 };
 
