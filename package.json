@@ -1,0 +1,15 @@
+{
+  "name": "saleledger-fullstack",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Full-stack PWA for daily earnings, expenses, and profit tracking.",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix server && npm run build --prefix client",
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
