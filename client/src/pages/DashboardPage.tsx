@@ -16,6 +16,7 @@ import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import type { User } from "../types/auth";
 import type { DailyEntry, EntryPayload } from "../types/entry";
 import { calculateMonthlySummary } from "../utils/calculations";
+import CustomSelect from "../components/CustomSelect";
 
 type DashboardPageProps = {
   user: User;
@@ -44,10 +45,10 @@ const getYearOptions = () => {
   const startYear = 2025;
   const currentYear = getCurrentYear();
 
-  return Array.from(
-    { length: currentYear - startYear + 1 },
-    (_, index) => startYear + index,
-  );
+  return Array.from({ length: currentYear - startYear + 1 }, (_, index) => ({
+    label: String(startYear + index),
+    value: startYear + index,
+  }));
 };
 
 export default function DashboardPage({ user, onLogout }: DashboardPageProps) {
@@ -144,41 +145,25 @@ export default function DashboardPage({ user, onLogout }: DashboardPageProps) {
       <OfflineBanner isOnline={isOnline} />
 
       <section className="card filter-card">
-        <div>
+        <div className="filter-card-header">
           <p className="section-kicker">Filter</p>
           <h2>Monthly View</h2>
         </div>
 
         <div className="filter-controls">
-          <label className="field">
-            <span>Month</span>
+          <CustomSelect
+            label="Month"
+            value={month}
+            options={MONTH_OPTIONS}
+            onChange={setMonth}
+          />
 
-            <select
-              value={month}
-              onChange={(event) => setMonth(Number(event.target.value))}
-            >
-              {MONTH_OPTIONS.map((monthOption) => (
-                <option key={monthOption.value} value={monthOption.value}>
-                  {monthOption.label}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="field">
-            <span>Year</span>
-
-            <select
-              value={year}
-              onChange={(event) => setYear(Number(event.target.value))}
-            >
-              {yearOptions.map((yearOption) => (
-                <option key={yearOption} value={yearOption}>
-                  {yearOption}
-                </option>
-              ))}
-            </select>
-          </label>
+          <CustomSelect
+            label="Year"
+            value={year}
+            options={yearOptions}
+            onChange={setYear}
+          />
         </div>
       </section>
 
