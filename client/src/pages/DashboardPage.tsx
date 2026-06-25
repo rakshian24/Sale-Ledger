@@ -183,6 +183,8 @@ export default function DashboardPage({ user, onLogout }: DashboardPageProps) {
         <EntryTable
           entries={entries}
           isOnline={isOnline}
+          month={month}
+          year={year}
           onEdit={setEditingEntry}
           onDelete={handleDelete}
         />
