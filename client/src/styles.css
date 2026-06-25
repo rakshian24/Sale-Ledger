@@ -954,3 +954,54 @@ h2 {
     min-width: 500px;
   }
 }
+
+.records-heading {
+  align-items: center;
+}
+
+.download-report-button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 0 16px;
+  border-radius: 999px;
+  background: #111827;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    opacity 160ms ease;
+}
+
+.download-report-button:hover:not(:disabled) {
+  background: #020617;
+  transform: translateY(-1px);
+}
+
+.download-report-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.download-report-button svg {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 560px) {
+  .records-heading {
+    display: grid;
+    gap: 14px;
+  }
+
+  .download-report-button {
+    width: 100%;
+  }
+}

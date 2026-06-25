@@ -1,6 +1,10 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
 
 export const TOKEN_STORAGE_KEY = "saleledger-token";
+
+export type ApiError = {
+  message: string;
+};
 
 type RequestOptions = RequestInit & {
   auth?: boolean;
@@ -20,7 +24,7 @@ export const clearToken = () => {
 
 export const apiClient = async <T>(
   endpoint: string,
-  options: RequestOptions = {}
+  options: RequestOptions = {},
 ): Promise<T> => {
   const headers = new Headers(options.headers);
 
@@ -38,7 +42,7 @@ export const apiClient = async <T>(
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
-    headers
+    headers,
   });
 
   const data = await response.json().catch(() => null);
